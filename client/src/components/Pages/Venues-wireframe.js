@@ -100,13 +100,13 @@ const Venues = () => {
             <label>Rating</label>
             <div className="rating-options">
               <label className="checkbox-option">
-                <input type="checkbox" /> 5 stars & up
+                <input type="checkbox" /> 5 stars 
               </label>
               <label className="checkbox-option">
-                <input type="checkbox" /> 4 stars & up
+                <input type="checkbox" /> 4 stars 
               </label>
               <label className="checkbox-option">
-                <input type="checkbox" /> 3 stars & up
+                <input type="checkbox" /> 3 stars 
               </label>
             </div>
           </div>
