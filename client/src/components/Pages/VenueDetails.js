@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../api/axiosConfig';
+import './VenueDetails.css';
 
 const VenueDetails = () => {
   const { id } = useParams();
@@ -258,240 +259,132 @@ const VenueDetails = () => {
   }
 
   return (
-    <div className="venue-details">
-      {/* Back Button */}
-      <Link to="/venues" className="back-link">
-        ← Back to Venues
-      </Link>
-
-      {/* Venue Header */}
-      <div className="venue-header">
-        <div className="venue-info">
-          <h1>{facility.name}</h1>
-          <div className="venue-rating">
-            <div className="stars">
-              {renderStars(facility.rating || 0)}
-            </div>
-            <span className="rating-text">
-              {facility.rating || 0} ({facility.totalReviews || 0} reviews)
-            </span>
-          </div>
-          {facility.address && (
-            <p className="venue-address">
-              📍 {facility.address.street}, {facility.address.city}, {facility.address.state} {facility.address.zipCode}
-            </p>
-          )}
-          <p className="venue-description">{facility.description}</p>
-          
-          <div className="venue-contact">
-            {(facility.phone || (facility.owner && facility.owner.phone)) && (
-              <div className="contact-item">
-                <strong>Phone:</strong> {facility.phone || facility.owner.phone}
-              </div>
+    <div className="venue-details-page">
+      <div className="vd-top">
+        <div className="vd-media">
+          <div className="vd-media-stage">
+            {facility.photos && facility.photos.length > 0 ? (
+              <img src={facility.photos[0]} alt={facility.name} />
+            ) : (
+              <div className="vd-media-placeholder">Images / Videos</div>
             )}
-            {(facility.email || (facility.owner && facility.owner.email)) && (
-              <div className="contact-item">
-                <strong>Email:</strong> {facility.email || facility.owner.email}
-              </div>
-            )}
-            {facility.website && (
-              <div className="contact-item">
-                <strong>Website:</strong> 
-                <a href={`https://${facility.website}`} target="_blank" rel="noopener noreferrer">
-                  {facility.website}
-                </a>
-              </div>
-            )}
-            {facility.owner && facility.owner.name && (
-              <div className="contact-item">
-                <strong>Facility Owner:</strong> {facility.owner.name}
-              </div>
+            {/* Simple prev/next placeholders */}
+            {facility.photos && facility.photos.length > 1 && (
+              <>
+                <button className="vd-nav prev" aria-label="Previous image">&#60;</button>
+                <button className="vd-nav next" aria-label="Next image">&#62;</button>
+              </>
             )}
           </div>
         </div>
-
-        <div className="venue-sidebar">
-          {facility.priceRange && facility.priceRange.min && facility.priceRange.max && (
-            <div className="price-range">
-              <h3>Price Range</h3>
-              <div className="price">₹{facility.priceRange.min} - ₹{facility.priceRange.max} per hour</div>
+        <aside className="vd-side">
+          <div className="vd-header">
+            <h1 className="vd-title">{facility.name}</h1>
+            <div className="vd-rating">
+              <span className="vd-stars">{renderStars(facility.rating || 0)}</span>
+              <span className="vd-rating-num">{facility.rating || 0} ({facility.totalReviews || 0})</span>
             </div>
-          )}
-          
-          {facility.operatingHours && facility.operatingHours.weekdays && facility.operatingHours.weekends && (
-            <div className="operating-hours">
-              <h3>Operating Hours</h3>
-              <div className="hours">
-                <div><strong>Weekdays:</strong> {facility.operatingHours.weekdays.open} - {facility.operatingHours.weekdays.close}</div>
-                <div><strong>Weekends:</strong> {facility.operatingHours.weekends.open} - {facility.operatingHours.weekends.close}</div>
+            {facility.address && (
+              <div className="vd-address-block">
+                <div className="vd-address-label">Address</div>
+                <div className="vd-address-text">{facility.address.street}, {facility.address.city}, {facility.address.state}, {facility.address.zipCode}</div>
               </div>
+            )}
+          </div>
+          {facility.operatingHours && (
+            <div className="vd-card">
+              <div className="vd-card-title">Operating Hours</div>
+              <div className="vd-hours">{facility.operatingHours.weekdays.open} - {facility.operatingHours.weekdays.close}</div>
             </div>
           )}
-        </div>
+          <div className="vd-card">
+            <div className="vd-card-title">Price Range</div>
+            <div className="vd-price">₹{facility.priceRange.min} - ₹{facility.priceRange.max} / hr</div>
+          </div>
+          <button className="vd-book-btn" disabled={!user}>Book This Venue</button>
+        </aside>
       </div>
 
-      {/* Photo Gallery */}
-      {facility.photos && facility.photos.length > 0 && (
-        <div className="venue-gallery">
-          {facility.photos.map((photo, index) => (
-            <img key={index} src={photo} alt={`${facility.name} ${index + 1}`} />
-          ))}
-        </div>
-      )}
-
-      {/* Amenities */}
-      <div className="section">
-        <h2>Amenities</h2>
-        <div className="venue-amenities">
-          {facility.amenities && facility.amenities.map((amenity, index) => (
-            <span key={index} className="amenity-tag">{amenity}</span>
+      <div className="vd-section">
+        <h2 className="vd-h2">Sports</h2>
+        <div className="vd-sports-grid">
+          {facility.sports && facility.sports.map((sport,i)=>(
+            <div key={i} className="vd-sport-card">{sport}</div>
           ))}
         </div>
       </div>
 
-      {/* Sports Available */}
-      <div className="section">
-        <h2>Sports Available</h2>
-        <div className="sports-list">
-          {facility.sports && facility.sports.map((sport, index) => (
-            <span key={index} className="sport-tag">{sport}</span>
+      <div className="vd-section">
+        <h2 className="vd-h2">Amenities</h2>
+        <div className="vd-amenities">
+          {facility.amenities && facility.amenities.map((a,i)=>(
+            <span key={i} className="vd-amenity-tag">{a}</span>
           ))}
         </div>
       </div>
 
-      {/* Court Booking Section */}
-      <div className="section">
-        <h2>Available Courts</h2>
-        
-        {/* Date Selector */}
-        <div className="booking-controls">
-          <div className="date-selector">
-            <label htmlFor="booking-date">Select Date:</label>
-            <input
-              id="booking-date"
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-            />
-          </div>
-          
-          <div className="availability-filter">
-            <label>Filter by availability:</label>
-            <select 
-              value={availabilityFilter} 
-              onChange={(e) => setAvailabilityFilter(e.target.value)}
-            >
-              <option value="all">All Courts</option>
-              <option value="available">Available Only</option>
-              <option value="unavailable">Unavailable Only</option>
-            </select>
-          </div>
-        </div>
+      <div className="vd-section">
+        <h2 className="vd-h2">About Venue</h2>
+        <ul className="vd-about-list">
+          <li>Tournament Training Venue</li>
+          <li>For more than 2 players extra charges may apply</li>
+          <li>Equipment available on rent</li>
+        </ul>
+        {facility.description && <p className="vd-desc">{facility.description}</p>}
+      </div>
 
-        {/* Courts List */}
-        <div className="courts-list">
+      <div className="vd-section">
+        <h2 className="vd-h2">Available Courts</h2>
+        <div className="vd-booking-bar">
+          <input type="date" value={selectedDate} onChange={e=>setSelectedDate(e.target.value)} />
+          <select value={availabilityFilter} onChange={e=>setAvailabilityFilter(e.target.value)}>
+            <option value="all">All Courts</option>
+            <option value="available">Available</option>
+            <option value="unavailable">Unavailable</option>
+          </select>
+        </div>
+        <div className="vd-courts">
           {filteredCourts.map(court => {
             const availableSlots = getAvailableSlots(court);
-            
             return (
-              <div key={court._id} className="court-card">
-                <div className="court-header">
+              <div key={court._id} className="vd-court-card">
+                <div className="vd-court-head">
                   <h3>{court.name}</h3>
-                  <div className="court-sport">{court.sport}</div>
+                  <span className="vd-court-sport">{court.sport}</span>
                 </div>
-                
-                <div className="court-details">
-                  <div className="court-price">₹{court.pricePerHour}/hour</div>
-                  <div className="court-capacity">Capacity: {court.capacity} players</div>
+                <div className="vd-court-meta">₹{court.pricePerHour}/hr · Capacity {court.capacity}</div>
+                <div className="vd-court-features">
+                  {court.features.map((f,i)=><span key={i} className="vd-feature-tag">{f}</span>)}
                 </div>
-                
-                <div className="court-features">
-                  {court.features.map((feature, index) => (
-                    <span key={index} className="feature-tag">{feature}</span>
-                  ))}
+                <div className="vd-slots">
+                  {availableSlots.length>0? availableSlots.map((slot,i)=>(
+                    <Link key={i} className="vd-slot" to={`/book-court/${court._id}?date=${selectedDate}&time=${slot.start}-${slot.end}`}>{slot.start}-{slot.end}</Link>
+                  )):<div className="vd-no-slots">No slots</div>}
                 </div>
-                
-                <div className="court-availability">
-                  <h4>Available Time Slots ({selectedDate})</h4>
-                  {availableSlots.length > 0 ? (
-                    <div className="time-slots">
-                      {availableSlots.map((slot, index) => (
-                        <Link
-                          key={index}
-                          to={`/book-court/${court._id}?date=${selectedDate}&time=${slot.start}-${slot.end}`}
-                          className="time-slot"
-                        >
-                          {slot.start} - {slot.end}
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="no-slots">No available slots for selected date</div>
-                  )}
-                </div>
-                
-                {availableSlots.length > 0 && user && (
-                  <div className="court-actions">
-                    <Link 
-                      to={`/book-court/${court._id}?date=${selectedDate}`}
-                      className="btn btn-primary"
-                    >
-                      Book This Court
-                    </Link>
-                  </div>
-                )}
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Reviews Section */}
-      <div className="section">
-        <h2>Customer Reviews</h2>
-        
-        {reviews.length > 0 ? (
-          <div className="reviews-list">
-            {reviews.slice(0, 5).map(review => (
-              <div key={review._id} className="review-card">
-                <div className="review-header">
-                  <div className="reviewer-info">
-                    <div className="reviewer-avatar">
-                      {review.user && review.user.avatar ? (
-                        <img src={review.user.avatar} alt={review.user.name} />
-                      ) : (
-                        <div className="avatar-placeholder">
-                          {review.user ? review.user.name.charAt(0) : 'A'}
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <div className="reviewer-name">{review.user ? review.user.name : 'Anonymous'}</div>
-                      <div className="review-date">
-                        {new Date(review.date || review.createdAt).toLocaleDateString()}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="review-rating">
-                    {renderStars(review.rating)}
-                  </div>
+      <div className="vd-section">
+        <h2 className="vd-h2">Player Reviews & Ratings</h2>
+        <div className="vd-reviews">
+          {reviews.slice(0,5).map(r=> (
+            <div key={r._id} className="vd-review-card">
+              <div className="vd-review-head">
+                <div className="vd-avatar">{r.user? r.user.name.charAt(0):'A'}</div>
+                <div className="vd-reviewer">
+                  <div className="vd-name">{r.user? r.user.name:'Anonymous'}</div>
+                  <div className="vd-date">{new Date(r.date || r.createdAt).toLocaleDateString()}</div>
                 </div>
-                <div className="review-comment">{review.comment}</div>
+                <div className="vd-review-stars">{renderStars(r.rating)}</div>
               </div>
-            ))}
-            
-            {reviews.length > 5 && (
-              <div className="view-more-reviews">
-                <button className="btn btn-outline">View All Reviews</button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="no-reviews">
-            <p>No reviews yet. Be the first to review this venue!</p>
-          </div>
-        )}
+              <p className="vd-review-text">{r.comment}</p>
+            </div>
+          ))}
+          {reviews.length>5 && <div className="vd-more">(Load more reviews)</div>}
+        </div>
       </div>
     </div>
   );
