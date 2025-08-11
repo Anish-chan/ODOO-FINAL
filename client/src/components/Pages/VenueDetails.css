@@ -1,0 +1,519 @@
+.venue-details {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+               sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.header {
+  background: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  border-bottom: 1px solid #e9ecef;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #2c3e50;
+  letter-spacing: -0.5px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.book-btn {
+  background: #495057;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.book-btn:hover {
+  background: #343a40;
+  text-decoration: none;
+  color: white;
+}
+
+.auth-links a {
+  color: #495057;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-links a:hover {
+  color: #212529;
+  text-decoration: underline;
+}
+
+.content-wrapper {
+  display: flex;
+  max-width: 1200px;
+  margin: 2rem auto;
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+.main-content {
+  flex: 2;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  border: 1px solid #e9ecef;
+}
+
+.venue-header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2.2rem;
+  color: #212529;
+  font-weight: 600;
+}
+
+.venue-meta {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.location {
+  color: #6c757d;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.star {
+  color: #dee2e6;
+  font-size: 1.1rem;
+}
+
+.star.filled {
+  color: #ffc107;
+}
+
+.rating-number {
+  color: #495057;
+  font-weight: 500;
+  margin-left: 0.25rem;
+}
+
+.image-gallery {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.image-container {
+  position: relative;
+  height: 350px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+}
+
+.venue-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.9);
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.6rem;
+  z-index: 2;
+  color: #495057;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.nav-btn.prev {
+  left: 1rem;
+}
+
+.nav-btn.next {
+  right: 1rem;
+}
+
+.sports-section, .amenities-section, .about-section, .reviews-section {
+  margin-bottom: 2.5rem;
+}
+
+.sports-section h3, .amenities-section h3, .about-section h3, 
+.reviews-section h3 {
+  margin-bottom: 1rem;
+  color: #212529;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.sports-subtitle {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.sports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.sport-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: #fafbfc;
+}
+
+.sport-card:hover {
+  border-color: #dee2e6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.sport-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sport-name {
+  font-weight: 500;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.amenity-dot {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.amenity-dot.available {
+  color: #28a745;
+}
+
+.amenity-dot.unavailable {
+  color: #dc3545;
+}
+
+.amenity-name {
+  color: #495057;
+  font-weight: 500;
+}
+
+.about-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-list li {
+  margin-bottom: 0.75rem;
+  color: #495057;
+  padding-left: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.about-content p {
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.review-card {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  background: #fafbfc;
+  transition: box-shadow 0.2s ease;
+}
+
+.review-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.reviewer-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.reviewer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: #212529;
+  font-size: 0.95rem;
+}
+
+.review-rating {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.review-rating .star {
+  font-size: 0.9rem;
+}
+
+.review-date {
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.review-comment {
+  margin: 0;
+  color: #495057;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.book-venue-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 1.2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.book-venue-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
+.operating-hours, .address-section, .location-map {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #e9ecef;
+}
+
+.hours-header, .address-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #212529;
+  font-size: 1rem;
+}
+
+.hours-time {
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.address-details {
+  color: #495057;
+  line-height: 1.5;
+}
+
+.address-details p {
+  margin: 0.4rem 0;
+  font-weight: 500;
+}
+
+.location-map h4 {
+  margin: 0 0 1rem 0;
+  color: #212529;
+  font-weight: 600;
+}
+
+.map-placeholder {
+  height: 200px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  border: 2px dashed #dee2e6;
+  transition: border-color 0.2s ease;
+}
+
+.map-placeholder:hover {
+  border-color: #adb5bd;
+}
+
+.map-content {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 1.2rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem 1rem;
+  }
+  
+  .content-wrapper {
+    flex-direction: column;
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+  
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .venue-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .sports-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+  
+  .amenities-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .review-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+  
+  .nav-btn.prev {
+    left: 0.5rem;
+  }
+  
+  .nav-btn.next {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .venue-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .image-container {
+    height: 250px;
+  }
+  
+  .sports-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
