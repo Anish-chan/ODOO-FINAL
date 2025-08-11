@@ -10,10 +10,21 @@ const auth = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
+    req.userRole = decoded.role;
     next();
   } catch (error) {
     res.status(401).json({ message: 'Token is not valid' });
   }
 };
 
-module.exports = auth;
+// Middleware to check if user has specific role
+const checkRole = (roles) => {
+  return (req, res, next) => {
+    if (!req.userRole || !roles.includes(req.userRole)) {
+      return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
+    }
+    next();
+  };
+};
+
+module.exports = { auth, checkRole };

@@ -15,7 +15,13 @@
   "devDependencies": {
     "concurrently": "^7.6.0"
   },
-  "keywords": ["mern", "react", "nodejs", "express", "mongodb"],
+  "keywords": [
+    "mern",
+    "react",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
   "author": "Your Name",
   "license": "MIT"
 }
