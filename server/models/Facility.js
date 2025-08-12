@@ -36,6 +36,45 @@ const facilitySchema = new mongoose.Schema({
     url: String,
     caption: String
   }],
+  pricing: {
+    hourlyRate: {
+      type: Number,
+      default: 0
+    },
+    peakHourRate: {
+      type: Number,
+      default: 0
+    },
+    currency: {
+      type: String,
+      default: 'USD',
+      enum: ['USD', 'EUR', 'GBP', 'INR']
+    }
+  },
+  reviews: {
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5
+    },
+    totalReviews: {
+      type: Number,
+      default: 0
+    },
+    comments: [{
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      comment: String,
+      rating: Number,
+      date: {
+        type: Date,
+        default: Date.now
+      }
+    }]
+  },
   rating: {
     average: {
       type: Number,

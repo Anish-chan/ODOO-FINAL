@@ -1,577 +1,608 @@
-.venue-details {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
-               sans-serif;
-  background-color: #f8f9fa;
+/* Venue Details Dark Theme Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.venue-details-dark {
   min-height: 100vh;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
-/* New Wireframe Styles */
-.venue-details-page {max-width:1180px;margin:0 auto;padding:1.5rem 1.25rem;font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
-.vd-top {display:grid;grid-template-columns:1.4fr 1fr;gap:1.75rem;align-items:start;margin-bottom:2.5rem;}
-.vd-media-stage {background:#fff;border:1px solid #e5e7eb;border-radius:14px;min-height:420px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.vd-media-stage img{width:100%;height:100%;object-fit:cover;}
-.vd-media-placeholder{color:#6b7280;font-weight:500;font-size:1.05rem;letter-spacing:.5px;}
-.vd-nav{position:absolute;top:50%;transform:translateY(-50%);background:#fff;border:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 2px 6px rgba(0,0,0,.15);cursor:pointer;transition:.2s;}
-.vd-nav.prev{left:14px}.vd-nav.next{right:14px}
-.vd-nav:hover{transform:translateY(-50%) scale(1.06);}
-.vd-side {display:flex;flex-direction:column;gap:1rem;}
-.vd-title {margin:0 0 .35rem;font-size:2.1rem;font-weight:600;letter-spacing:.5px;}
-.vd-rating{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;}
-.vd-stars .star{font-size:1.05rem;margin-right:2px;}
-.vd-rating-num{font-size:.9rem;font-weight:500;color:#374151;}
-.vd-address-block{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:.85rem 1rem;}
-.vd-address-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;font-weight:600;margin-bottom:.3rem;}
-.vd-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem 1.1rem;}
-.vd-card-title{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;font-weight:600;margin-bottom:.4rem;}
-.vd-hours,.vd-price{font-weight:600;color:#111827;font-size:.95rem;}
-.vd-book-btn{margin-top:.25rem;background:#16a34a;border:none;color:#fff;padding:.9rem 1.25rem;border-radius:10px;font-weight:600;cursor:pointer;font-size:.95rem;box-shadow:0 4px 10px -2px rgba(16,185,129,.35);transition:.2s;}
-.vd-book-btn:hover:not(:disabled){background:#15803d;}
-.vd-book-btn:disabled{background:#9ca3af;cursor:not-allowed;box-shadow:none;}
-.vd-section{margin-bottom:2.75rem;}
-.vd-h2{font-size:1.4rem;font-weight:600;margin:0 0 1.25rem;color:#111827;}
-.vd-sports-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.75rem;}
-.vd-sport-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem .75rem;text-align:center;font-weight:600;font-size:.85rem;color:#1f2937;display:flex;align-items:center;justify-content:center;min-height:75px;}
-.vd-amenities{display:flex;flex-wrap:wrap;gap:.55rem;}
-.vd-amenity-tag{background:#ecfdf5;color:#065f46;padding:.45rem .8rem;font-size:.7rem;font-weight:600;border-radius:6px;letter-spacing:.05em;}
-.vd-about-list{margin:0 0 1rem;padding:0;list-style:none;}
-.vd-about-list li{position:relative;padding-left:1.1rem;margin-bottom:.4rem;font-size:.82rem;color:#374151;font-weight:500;}
-.vd-about-list li:before{content:'—';position:absolute;left:0;color:#9ca3af;}
-.vd-desc{font-size:.85rem;line-height:1.55;color:#4b5563;max-width:760px;}
-.vd-booking-bar{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;}
-.vd-booking-bar input[type=date],.vd-booking-bar select{border:1px solid #d1d5db;border-radius:8px;padding:.55rem .75rem;font-size:.8rem;font-weight:500;background:#fff;}
-.vd-courts{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));}
-.vd-court-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:1rem 1rem .9rem;display:flex;flex-direction:column;gap:.5rem;}
-.vd-court-head{display:flex;justify-content:space-between;align-items:center;}
-.vd-court-head h3{margin:0;font-size:1rem;font-weight:600;}
-.vd-court-sport{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:#6b7280;background:#f3f4f6;padding:.35rem .55rem;border-radius:6px;}
-.vd-court-meta{font-size:.7rem;font-weight:600;color:#374151;}
-.vd-court-features{display:flex;flex-wrap:wrap;gap:.4rem;}
-.vd-feature-tag{background:#f1f5f9;font-size:.55rem;font-weight:600;padding:.35rem .5rem;border-radius:5px;color:#334155;letter-spacing:.05em;}
-.vd-slots{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.25rem;}
-.vd-slot{background:#10b981;color:#fff;text-decoration:none;font-size:.6rem;font-weight:600;padding:.4rem .55rem;border-radius:6px;transition:.2s;}
-.vd-slot:hover{background:#059669;}
-.vd-no-slots{font-size:.65rem;color:#6b7280;font-weight:600;}
-.vd-reviews{display:flex;flex-direction:column;gap:1rem;}
-.vd-review-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:1rem 1.1rem;}
-.vd-review-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem;}
-.vd-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;}
-.vd-reviewer{display:flex;flex-direction:column;gap:2px;}
-.vd-name{font-size:.8rem;font-weight:600;color:#111827;}
-.vd-date{font-size:.55rem;font-weight:600;color:#6b7280;letter-spacing:.05em;}
-.vd-review-stars .star{font-size:.7rem;}
-.vd-review-text{margin:0;font-size:.72rem;line-height:1.45;font-weight:500;color:#374151;}
-.vd-more{font-size:.62rem;font-weight:600;color:#2563eb;margin-top:.25rem;}
-@media (max-width:980px){.vd-top{grid-template-columns:1fr;}.vd-media-stage{min-height:340px;}}
-@media (max-width:640px){.vd-title{font-size:1.75rem;}.vd-media-stage{min-height:260px;border-radius:10px;}.vd-sport-card{min-height:60px;}.vd-courts{grid-template-columns:1fr;}}
 
-.header {
-  background: white;
-  padding: 1rem 2rem;
+.loading-dark {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  border-bottom: 1px solid #e9ecef;
+  height: 100vh;
+  color: #ffffff;
+  font-size: 18px;
 }
 
-.logo {
-  font-weight: bold;
-  font-size: 1.4rem;
-  color: #2c3e50;
-  letter-spacing: -0.5px;
+/* Header Styles */
+.venue-header-dark {
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.book-btn {
-  background: #495057;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-.book-btn:hover {
-  background: #343a40;
-  text-decoration: none;
-  color: white;
-}
-
-.auth-links a {
-  color: #495057;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.auth-links a:hover {
-  color: #212529;
-  text-decoration: underline;
-}
-
-.content-wrapper {
-  display: flex;
+.venue-container {
   max-width: 1200px;
-  margin: 2rem auto;
-  gap: 2rem;
+  margin: 0 auto;
   padding: 0 1rem;
 }
 
-.main-content {
-  flex: 2;
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-  border: 1px solid #e9ecef;
+.venue-header-dark .venue-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.venue-header h1 {
-  margin: 0 0 1rem 0;
-  font-size: 2.2rem;
-  color: #212529;
-  font-weight: 600;
+.venue-logo a {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 1px;
 }
 
-.venue-meta {
+.venue-header-actions {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e9ecef;
+  gap: 1rem;
 }
 
-.location {
-  color: #6c757d;
-  font-size: 1rem;
+.venue-book-btn {
+  background-color: #333;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border: 1px solid #555;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
   font-weight: 500;
+  transition: all 0.3s ease;
 }
 
-.rating {
+.venue-book-btn:hover {
+  background-color: #444;
+  border-color: #666;
+}
+
+.venue-login-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #555;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.venue-login-link:hover {
+  background-color: #333;
+}
+
+.venue-user-welcome {
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* Main Container */
+.venue-main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.venue-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 3rem;
+}
+
+/* Left Content */
+.venue-left-content {
+  flex: 1;
+}
+
+/* Venue Title Section */
+.venue-title-section {
+  margin-bottom: 2rem;
+}
+
+.venue-name {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.venue-location-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.venue-location-text {
+  color: #ccc;
+  font-size: 16px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.venue-rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.venue-stars {
+  display: flex;
+  gap: 2px;
+}
+
 .star {
-  color: #dee2e6;
-  font-size: 1.1rem;
+  color: #444;
+  font-size: 16px;
 }
 
 .star.filled {
-  color: #ffc107;
+  color: #ffd700;
 }
 
-.rating-number {
-  color: #495057;
-  font-weight: 500;
-  margin-left: 0.25rem;
+.venue-rating-text {
+  color: #ccc;
+  font-size: 14px;
+  margin-left: 0.5rem;
 }
 
-.image-gallery {
+/* Image Gallery */
+.venue-image-gallery {
   position: relative;
-  margin-bottom: 2.5rem;
-}
-
-.image-container {
-  position: relative;
-  height: 350px;
-  background: #f8f9fa;
+  margin-bottom: 3rem;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #e9ecef;
+  background-color: #1a1a1a;
 }
 
-.venue-image {
+.venue-image-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.venue-main-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.image-overlay {
+.venue-image-overlay {
   position: absolute;
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.75);
-  color: white;
-  padding: 0.6rem 1.2rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 500;
 }
 
-.nav-btn {
+.venue-nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.9);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
   border: none;
-  width: 45px;
-  height: 45px;
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
   cursor: pointer;
-  font-size: 1.6rem;
-  z-index: 2;
-  color: #495057;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
-.nav-btn:hover {
-  background: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  transform: translateY(-50%) scale(1.05);
+.venue-nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
-.nav-btn.prev {
+.venue-prev {
   left: 1rem;
 }
 
-.nav-btn.next {
+.venue-next {
   right: 1rem;
 }
 
-.sports-section, .amenities-section, .about-section, .reviews-section {
-  margin-bottom: 2.5rem;
-}
-
-.sports-section h3, .amenities-section h3, .about-section h3, 
-.reviews-section h3 {
-  margin-bottom: 1rem;
-  color: #212529;
-  font-size: 1.4rem;
+/* Section Styles */
+.venue-section-title {
+  font-size: 24px;
   font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
 }
 
-.sports-subtitle {
-  color: #6c757d;
+/* Sports Section */
+.venue-sports-section {
+  margin-bottom: 3rem;
+}
+
+.venue-sports-subtitle {
+  color: #999;
+  font-size: 14px;
   margin-bottom: 1.5rem;
-  font-size: 0.95rem;
 }
 
-.sports-grid {
+.venue-sports-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
 }
 
-.sport-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem 1rem;
-  border: 2px solid #e9ecef;
+.venue-sport-card {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
   border-radius: 12px;
+  padding: 1.5rem;
   text-align: center;
-  transition: all 0.2s ease;
-  background: #fafbfc;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.sport-card:hover {
-  border-color: #dee2e6;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+.venue-sport-card:hover {
+  background-color: #333;
+  border-color: #555;
   transform: translateY(-2px);
 }
 
-.sport-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
+.venue-sport-icon {
+  font-size: 32px;
+  margin-bottom: 0.5rem;
 }
 
-.sport-name {
+.venue-sport-name {
+  color: #ffffff;
+  font-size: 14px;
   font-weight: 500;
-  color: #495057;
-  font-size: 0.9rem;
 }
 
-.amenities-grid {
+/* Amenities Section */
+.venue-amenities-section {
+  margin-bottom: 3rem;
+}
+
+.venue-amenities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.5rem;
 }
 
-.amenity-item {
+.venue-amenity-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 0;
+  padding: 0.75rem 0;
 }
 
-.amenity-dot {
-  font-size: 1.2rem;
-  font-weight: bold;
+.venue-amenity-check {
+  color: #4ade80;
+  font-size: 16px;
+  font-weight: 700;
 }
 
-.amenity-dot.available {
-  color: #28a745;
+.venue-amenity-name {
+  color: #ccc;
+  font-size: 14px;
 }
 
-.amenity-dot.unavailable {
-  color: #dc3545;
+/* About Section */
+.venue-about-section {
+  margin-bottom: 3rem;
 }
 
-.amenity-name {
-  color: #495057;
-  font-weight: 500;
-}
-
-.about-list {
+.venue-about-list {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
-.about-list li {
-  margin-bottom: 0.75rem;
-  color: #495057;
-  padding-left: 1rem;
-  font-weight: 500;
-  line-height: 1.5;
-}
-
-.about-content p {
-  color: #6c757d;
+.venue-about-list li {
+  color: #ccc;
+  font-size: 14px;
   line-height: 1.6;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.review-card {
-  border: 1px solid #e9ecef;
+/* Reviews Section */
+.venue-reviews-section {
+  margin-bottom: 3rem;
+}
+
+.venue-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.venue-review-card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
   border-radius: 12px;
   padding: 1.5rem;
-  margin-bottom: 1rem;
-  background: #fafbfc;
-  transition: box-shadow 0.2s ease;
 }
 
-.review-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.review-header {
+.venue-review-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.reviewer-info {
+.venue-reviewer-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
-.reviewer-avatar {
-  width: 45px;
-  height: 45px;
+.venue-reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #333;
+  color: #ffffff;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  color: white;
-  font-size: 1.1rem;
+  font-weight: 600;
+  font-size: 16px;
 }
 
-.reviewer-details {
+.venue-reviewer-details {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.reviewer-name {
-  font-weight: 600;
-  color: #212529;
-  font-size: 0.95rem;
-}
-
-.review-rating {
-  display: flex;
-  gap: 0.15rem;
-}
-
-.review-rating .star {
-  font-size: 0.9rem;
-}
-
-.review-date {
-  color: #6c757d;
-  font-size: 0.85rem;
+.venue-reviewer-name {
+  color: #ffffff;
   font-weight: 500;
+  font-size: 14px;
 }
 
-.review-comment {
-  margin: 0;
-  color: #495057;
-  line-height: 1.6;
-  font-size: 0.95rem;
-}
-
-.sidebar {
-  flex: 1;
+.venue-review-stars {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  gap: 1px;
 }
 
-.book-venue-btn {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-  border: none;
-  padding: 1.2rem;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+.venue-review-date {
+  color: #666;
+  font-size: 12px;
 }
 
-.book-venue-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-}
-
-.operating-hours, .address-section, .location-map {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  border: 1px solid #e9ecef;
-}
-
-.hours-header, .address-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: #212529;
-  font-size: 1rem;
-}
-
-.hours-time {
-  color: #495057;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.address-details {
-  color: #495057;
+.venue-review-comment {
+  color: #ccc;
+  font-size: 14px;
   line-height: 1.5;
+  margin: 0;
 }
 
-.address-details p {
-  margin: 0.4rem 0;
+.venue-load-more {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.venue-load-more-link {
+  color: #4ade80;
+  text-decoration: none;
+  font-size: 14px;
   font-weight: 500;
 }
 
-.location-map h4 {
-  margin: 0 0 1rem 0;
-  color: #212529;
-  font-weight: 600;
+.venue-load-more-link:hover {
+  text-decoration: underline;
 }
 
-.map-placeholder {
-  height: 200px;
-  background: #f8f9fa;
+/* Sidebar */
+.venue-sidebar {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 120px;
+}
+
+.venue-book-main-btn {
+  width: 100%;
+  background-color: #4ade80;
+  color: #000000;
+  border: none;
   border-radius: 8px;
+  padding: 1rem;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+.venue-book-main-btn:hover {
+  background-color: #22c55e;
+  transform: translateY(-1px);
+}
+
+/* Sidebar Cards */
+.venue-hours-card,
+.venue-address-card,
+.venue-map-card {
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.venue-hours-header,
+.venue-address-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.venue-hours-icon,
+.venue-address-icon {
+  font-size: 16px;
+}
+
+.venue-hours-title,
+.venue-address-title {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.venue-hours-time {
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.venue-address-content {
+  color: #ccc;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.venue-address-content p {
+  margin-bottom: 0.25rem;
+}
+
+.venue-map-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.venue-map-container {
+  width: 100%;
+  height: 200px;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.venue-map-placeholder {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6c757d;
-  border: 2px dashed #dee2e6;
-  transition: border-color 0.2s ease;
+  color: #666;
+  font-size: 14px;
+  background-color: #1a1a1a;
 }
 
-.map-placeholder:hover {
-  border-color: #adb5bd;
-}
-
-.map-content {
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-  font-size: 1.2rem;
-  color: #6c757d;
-  font-weight: 500;
+/* Footer */
+.venue-footer {
+  background-color: #1a1a1a;
+  border-top: 1px solid #333;
+  padding: 2rem 0;
+  text-align: center;
+  color: #666;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .header {
-    padding: 0.5rem 1rem;
+@media (max-width: 1024px) {
+  .venue-content-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
   
-  .content-wrapper {
+  .venue-sidebar {
+    position: static;
+    order: -1;
+  }
+  
+  .venue-location-rating {
     flex-direction: column;
-    margin: 1rem auto;
-    padding: 0 0.5rem;
+    align-items: flex-start;
   }
-  
-  .main-content {
+}
+
+@media (max-width: 768px) {
+  .venue-main-container {
     padding: 1rem;
   }
   
-  .venue-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+  .venue-name {
+    font-size: 28px;
   }
   
-  .sports-grid {
+  .venue-image-container {
+    height: 300px;
+  }
+  
+  .venue-sports-grid {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   }
   
-  .amenities-grid {
+  .venue-amenities-grid {
     grid-template-columns: 1fr;
   }
   
-  .review-header {
+  .venue-header-actions {
     flex-direction: column;
     gap: 0.5rem;
-  }
-  
-  .nav-btn {
-    width: 35px;
-    height: 35px;
-    font-size: 1.2rem;
-  }
-  
-  .nav-btn.prev {
-    left: 0.5rem;
-  }
-  
-  .nav-btn.next {
-    right: 0.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .venue-header h1 {
-    font-size: 1.5rem;
+  .venue-header-dark .venue-container {
+    flex-direction: column;
+    gap: 1rem;
   }
   
-  .image-container {
+  .venue-image-container {
     height: 250px;
   }
   
-  .sports-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .venue-nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+  
+  .venue-reviewer-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .venue-review-header {
+    flex-direction: column;
+    gap: 1rem;
   }
 }

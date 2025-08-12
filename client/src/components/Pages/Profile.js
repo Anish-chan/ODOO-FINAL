@@ -1,266 +1,324 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import api from '../../api/axiosConfig';
+import './Profile.css';
 
 const Profile = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('all');
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editMode, setEditMode] = useState(false);
+  const fileInputRef = useRef(null);
+  
+  const [activeTab, setActiveTab] = useState('profile');
   const [profileData, setProfileData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
+    fullName: 'Mitchell Admin',
+    email: 'mitchelladmin2017@gmail.com',
+    phone: '9999999999',
+    profilePicture: null
+  });
+  
+  const [passwordData, setPasswordData] = useState({
     oldPassword: '',
     newPassword: ''
   });
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  // Mock bookings data
+  const [bookings] = useState([
+    {
+      id: 1,
+      venue: 'Skyline Badminton Court (Badminton)',
+      date: '18 June 2024',
+      time: '5:00 PM - 6:00 PM',
+      location: 'Rajkot, Gujarat',
+      status: 'Confirmed',
+      type: 'current'
+    },
+    {
+      id: 2,
+      venue: 'Skyline Badminton Court (Badminton)',
+      date: '10 June 2024',
+      time: '5:00 PM - 6:00 PM',
+      location: 'Rajkot, Gujarat',
+      status: 'Confirmed',
+      type: 'past'
+    }
+  ]);
 
-  const fetchBookings = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get('/bookings/my-bookings');
-      if (response.data.success) {
-        setBookings(response.data.bookings);
-      }
-    } catch (error) {
-      console.error('Error fetching bookings:', error);
-    } finally {
-      setLoading(false);
+  const handleProfilePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfilePictureChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileData(prev => ({
+          ...prev,
+          profilePicture: e.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleProfileChange = (field, value) => {
+    setProfileData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handlePasswordChange = (field, value) => {
+    setPasswordData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSaveProfile = () => {
+    console.log('Saving profile:', profileData);
+    // Add API call here
+  };
+
+  const handleResetProfile = () => {
     setProfileData({
-      ...profileData,
-      [e.target.name]: e.target.value
+      fullName: 'Mitchell Admin',
+      email: 'mitchelladmin2017@gmail.com',
+      phone: '9999999999',
+      profilePicture: null
+    });
+    setPasswordData({
+      oldPassword: '',
+      newPassword: ''
     });
   };
 
-  const handleSave = async () => {
-    try {
-      // Handle profile update logic here
-      console.log('Saving profile:', profileData);
-      setEditMode(false);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    }
+  const handleCancelBooking = (bookingId) => {
+    console.log('Canceling booking:', bookingId);
+    // Add API call here
   };
 
-  const filteredBookings = bookings.filter(booking => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'confirmed') return booking.status === 'confirmed';
-    if (activeTab === 'cancelled') return booking.status === 'cancelled';
-    return true;
-  });
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  const handleWriteReview = (bookingId) => {
+    console.log('Writing review for booking:', bookingId);
+    // Add navigation to review page
   };
 
-  const formatTime = (timeString) => {
-    return new Date(`2000-01-01T${timeString}`).toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
-  };
+  const renderProfileTab = () => (
+    <div className="profile-content">
+      <div className="profile-left">
+        <div className="profile-picture-section">
+          <div className="profile-picture-container" onClick={handleProfilePictureClick}>
+            {profileData.profilePicture ? (
+              <img src={profileData.profilePicture} alt="Profile" className="profile-picture" />
+            ) : (
+              <div className="profile-picture-placeholder">
+                <span>📷</span>
+              </div>
+            )}
+            <div className="profile-picture-overlay">
+              <span>Change Photo</span>
+            </div>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleProfilePictureChange}
+            style={{ display: 'none' }}
+          />
+          <h3>{profileData.fullName}</h3>
+          <p>{profileData.phone}</p>
+          <p>{profileData.email}</p>
+        </div>
+        
+        <button 
+          className="edit-profile-btn"
+          onClick={() => setActiveTab('edit')}
+        >
+          Edit Profile
+        </button>
+        
+        <button 
+          className="all-bookings-btn"
+          onClick={() => setActiveTab('bookings')}
+        >
+          All Bookings
+        </button>
+      </div>
+      
+      <div className="profile-right">
+        {activeTab === 'bookings' ? (
+          <>
+            <div className="tab-buttons">
+              <button 
+                className="tab-btn active"
+                onClick={() => setActiveTab('bookings')}
+              >
+                All Bookings
+              </button>
+              <button className="tab-btn cancelled">
+                Cancelled
+              </button>
+            </div>
+            
+            <div className="bookings-list">
+              {bookings.map(booking => (
+                <div key={booking.id} className="booking-card">
+                  <div className="booking-header">
+                    <h4>📍 {booking.venue}</h4>
+                  </div>
+                  <div className="booking-details">
+                    <p>📅 {booking.date}</p>
+                    <p>🕐 {booking.time}</p>
+                    <p>📍 {booking.location}</p>
+                    <div className="booking-status">
+                      <span className="status-badge confirmed">✅ {booking.status}</span>
+                    </div>
+                  </div>
+                  <div className="booking-actions">
+                    {booking.type === 'current' && (
+                      <button 
+                        className="cancel-btn"
+                        onClick={() => handleCancelBooking(booking.id)}
+                      >
+                        Cancel Booking
+                      </button>
+                    )}
+                    <button 
+                      className="review-btn"
+                      onClick={() => handleWriteReview(booking.id)}
+                    >
+                      Write Review
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {bookings.length === 0 && (
+                <div className="no-bookings">
+                  <p>No cancel booking button for past dates</p>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="profile-welcome">
+            <p>Click "All Bookings" to view your booking history</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderEditTab = () => (
+    <div className="edit-profile-content">
+      <div className="edit-left">
+        <div className="profile-picture-section">
+          <div className="profile-picture-container" onClick={handleProfilePictureClick}>
+            {profileData.profilePicture ? (
+              <img src={profileData.profilePicture} alt="Profile" className="profile-picture" />
+            ) : (
+              <div className="profile-picture-placeholder">
+                <span>📷</span>
+              </div>
+            )}
+            <div className="profile-picture-overlay">
+              <span>Change Photo</span>
+            </div>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleProfilePictureChange}
+            style={{ display: 'none' }}
+          />
+          <h3>{profileData.fullName}</h3>
+          <p>{profileData.phone}</p>
+          <p>{profileData.email}</p>
+        </div>
+        
+        <button 
+          className="all-bookings-btn"
+          onClick={() => setActiveTab('bookings')}
+        >
+          All Bookings
+        </button>
+      </div>
+      
+      <div className="edit-right">
+        <div className="edit-form">
+          <div className="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              value={profileData.fullName}
+              onChange={(e) => handleProfileChange('fullName', e.target.value)}
+              className="form-control"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={profileData.email}
+              onChange={(e) => handleProfileChange('email', e.target.value)}
+              className="form-control"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>Old Password</label>
+            <div className="password-input">
+              <input
+                type="password"
+                value={passwordData.oldPassword}
+                onChange={(e) => handlePasswordChange('oldPassword', e.target.value)}
+                className="form-control"
+              />
+              <span className="password-toggle">👁</span>
+            </div>
+          </div>
+          
+          <div className="form-group">
+            <label>New Password</label>
+            <div className="password-input">
+              <input
+                type="password"
+                value={passwordData.newPassword}
+                onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
+                className="form-control"
+              />
+              <span className="password-toggle">👁</span>
+            </div>
+          </div>
+          
+          <div className="form-actions">
+            <button className="reset-btn" onClick={handleResetProfile}>
+              Reset
+            </button>
+            <button className="save-btn" onClick={handleSaveProfile}>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="profile-page">
+      <div className="profile-header">
+        <div className="header-left">
+          <h1>QUICKCOURT</h1>
+        </div>
+        <div className="header-right">
+          <button className="book-btn">📖 Book</button>
+          <span className="user-info">👤 Mitchell Admin</span>
+        </div>
+      </div>
       <div className="profile-container">
-        {/* Left Sidebar - Profile Info */}
-        <div className="profile-sidebar">
-          <div className="profile-header">
-            <div className="profile-avatar-large">
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
-            </div>
-            <h2 className="profile-name">{user?.name || 'User'}</h2>
-            <p className="profile-email">{user?.email}</p>
-          </div>
-
-          <div className="profile-nav">
-            <button 
-              className={`profile-nav-btn ${editMode ? 'active' : ''}`}
-              onClick={() => setEditMode(true)}
-            >
-              Edit Profile
-            </button>
-            <button 
-              className={`profile-nav-btn ${!editMode ? 'active' : ''}`}
-              onClick={() => setEditMode(false)}
-            >
-              All Bookings
-            </button>
-          </div>
-        </div>
-
-        {/* Right Content Area */}
-        <div className="profile-content">
-          {!editMode ? (
-            // Bookings Section
-            <div className="bookings-section">
-              <div className="bookings-header">
-                <h3>My Bookings</h3>
-                <div className="booking-tabs">
-                  <button 
-                    className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('all')}
-                  >
-                    All Bookings
-                  </button>
-                  <button 
-                    className={`tab-btn ${activeTab === 'confirmed' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('confirmed')}
-                  >
-                    Confirmed
-                  </button>
-                </div>
-              </div>
-
-              <div className="bookings-list">
-                {loading ? (
-                  <div className="loading-state">Loading bookings...</div>
-                ) : filteredBookings.length > 0 ? (
-                  filteredBookings.map((booking) => (
-                    <div key={booking._id} className="booking-card">
-                      <div className="booking-info">
-                        <div className="booking-venue">
-                          <span className="venue-icon">📍</span>
-                          <span className="venue-name">
-                            {booking.court?.facility?.name || 'Venue Name'}
-                          </span>
-                        </div>
-                        <div className="booking-details">
-                          <span className="booking-date">
-                            📅 {formatDate(booking.date)}
-                          </span>
-                          <span className="booking-time">
-                            🕐 {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
-                          </span>
-                          <span className="booking-location">
-                            📍 {booking.court?.facility?.address?.city || 'Location'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="booking-actions">
-                        <span className={`booking-status ${booking.status}`}>
-                          {booking.status === 'confirmed' ? '✅ Confirmed' : 
-                           booking.status === 'cancelled' ? '❌ Cancelled' : 
-                           booking.status}
-                        </span>
-                        <div className="booking-buttons">
-                          <button className="btn-cancel">Cancel Booking</button>
-                          <button className="btn-review">Write Review</button>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="empty-state">
-                    <p>No bookings found.</p>
-                    <button className="btn-cancel">Book a venue</button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            // Edit Profile Section
-            <div className="edit-profile-section">
-              <h3>Edit Profile</h3>
-              <form className="edit-profile-form">
-                <div className="form-group">
-                  <label htmlFor="name">Full Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={profileData.name}
-                    onChange={handleInputChange}
-                    className="form-input"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={profileData.email}
-                    onChange={handleInputChange}
-                    className="form-input"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="phone">Phone (Optional)</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={profileData.phone}
-                    onChange={handleInputChange}
-                    className="form-input"
-                    placeholder="Enter phone number"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="oldPassword">Old Password</label>
-                  <input
-                    type="password"
-                    id="oldPassword"
-                    name="oldPassword"
-                    value={profileData.oldPassword}
-                    onChange={handleInputChange}
-                    className="form-input"
-                    placeholder="Enter current password"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="newPassword">New Password</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    name="newPassword"
-                    value={profileData.newPassword}
-                    onChange={handleInputChange}
-                    className="form-input"
-                    placeholder="Enter new password"
-                  />
-                </div>
-
-                <div className="form-actions">
-                  <button 
-                    type="button" 
-                    className="btn-reset"
-                    onClick={() => setEditMode(false)}
-                  >
-                    Reset
-                  </button>
-                  <button 
-                    type="button" 
-                    className="btn-save"
-                    onClick={handleSave}
-                  >
-                    Save
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-        </div>
+        <h2 className="page-title">Profile Page</h2>
+        
+        {activeTab === 'edit' ? renderEditTab() : renderProfileTab()}
       </div>
     </div>
   );

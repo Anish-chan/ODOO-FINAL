@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../api/axiosConfig';
-import './FacilityManagement.css';
+import './MyFacilitiesImproved.css';
 
 const MyFacilities = () => {
   const [facilities, setFacilities] = useState([]);
@@ -23,6 +23,16 @@ const MyFacilities = () => {
     sportsSupported: [],
     amenities: [],
     photos: [],
+    pricing: {
+      hourlyRate: '',
+      peakHourRate: '',
+      currency: 'USD'
+    },
+    reviews: {
+      rating: 0,
+      totalReviews: 0,
+      comments: []
+    },
     operatingHours: {
       monday: { open: '09:00', close: '21:00', isOpen: true },
       tuesday: { open: '09:00', close: '21:00', isOpen: true },
@@ -43,39 +53,12 @@ const MyFacilities = () => {
 
   const fetchMyFacilities = async () => {
     try {
+      // All facility owners use their own facilities endpoint
       const response = await API.get('/api/facilities/owner/my-facilities');
       setFacilities(response.data);
     } catch (error) {
       console.error('Error fetching facilities:', error);
-      // Demo data for testing
-      setFacilities([
-        {
-          _id: '1',
-          name: 'Downtown Sports Complex',
-          description: 'Premier sports facility in the city center',
-          address: { street: '123 Main St', city: 'Metro City', state: 'CA', zipCode: '12345' },
-          sportsSupported: ['basketball', 'tennis'],
-          amenities: ['Parking', 'Locker Rooms', 'WiFi'],
-          status: 'approved',
-          totalCourts: 5,
-          activeCourts: 5,
-          createdAt: '2024-01-01',
-          adminComments: 'Great facility!'
-        },
-        {
-          _id: '2',
-          name: 'Elite Badminton Center',
-          description: 'Professional badminton courts with modern equipment',
-          address: { street: '456 Oak Ave', city: 'Metro City', state: 'CA', zipCode: '12346' },
-          sportsSupported: ['badminton'],
-          amenities: ['Equipment Rental', 'Showers', 'Air Conditioning'],
-          status: 'pending',
-          totalCourts: 3,
-          activeCourts: 3,
-          createdAt: '2024-01-15',
-          adminComments: ''
-        }
-      ]);
+      setFacilities([]);
     } finally {
       setLoading(false);
     }
@@ -131,6 +114,32 @@ const MyFacilities = () => {
     }));
   };
 
+  const handlePricingChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      pricing: {
+        ...prev.pricing,
+        [field]: value
+      }
+    }));
+  };
+
+  const handlePhotoUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const photoUrls = files.map(file => URL.createObjectURL(file));
+    setFormData(prev => ({
+      ...prev,
+      photos: [...prev.photos, ...photoUrls]
+    }));
+  };
+
+  const removePhoto = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
+    }));
+  };
+
   const resetForm = () => {
     setFormData({
       name: '',
@@ -145,6 +154,16 @@ const MyFacilities = () => {
       sportsSupported: [],
       amenities: [],
       photos: [],
+      pricing: {
+        hourlyRate: '',
+        peakHourRate: '',
+        currency: 'USD'
+      },
+      reviews: {
+        rating: 0,
+        totalReviews: 0,
+        comments: []
+      },
       operatingHours: {
         monday: { open: '09:00', close: '21:00', isOpen: true },
         tuesday: { open: '09:00', close: '21:00', isOpen: true },
@@ -168,30 +187,81 @@ const MyFacilities = () => {
     }
 
     try {
+      setLoading(true);
+      
+      // Sanitize data before sending
+      const sanitizedData = {
+        ...formData,
+        pricing: {
+          hourlyRate: formData.pricing.hourlyRate ? parseFloat(formData.pricing.hourlyRate) : 0,
+          peakHourRate: formData.pricing.peakHourRate ? parseFloat(formData.pricing.peakHourRate) : 0,
+          currency: formData.pricing.currency || 'USD'
+        },
+        reviews: {
+          rating: formData.reviews.rating || 0,
+          totalReviews: formData.reviews.totalReviews || 0,
+          comments: formData.reviews.comments || []
+        },
+        photos: formData.photos.map(photo => {
+          if (typeof photo === 'string') {
+            return { url: photo, caption: '' };
+          }
+          return photo;
+        })
+      };
+      
       if (editingFacility) {
-        await API.put(`/api/facilities/${editingFacility._id}`, formData);
+        // Update existing facility
+        await API.put(`/api/facilities/${editingFacility._id}`, sanitizedData);
         alert('Facility updated successfully!');
       } else {
-        await API.post('/api/facilities', formData);
-        alert('Facility created successfully! It will be visible after admin approval.');
+        // Create new facility
+        await API.post('/api/facilities', sanitizedData);
+        alert('Facility created successfully!');
       }
       
       resetForm();
-      fetchMyFacilities();
+      await fetchMyFacilities(); // Refresh the list
     } catch (error) {
       console.error('Error saving facility:', error);
-      alert('Error saving facility. Please try again.');
+      
+      // Better error handling
+      let errorMessage = 'Error saving facility. Please try again.';
+      
+      if (error.response?.data?.errors) {
+        errorMessage = `Validation errors: ${error.response.data.errors.join(', ')}`;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(`Error: ${errorMessage}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEdit = (facility) => {
+    // Process photos to ensure they're in the right format for editing
+    const processedPhotos = (facility.photos || []).map(photo => {
+      if (typeof photo === 'object' && photo.url) {
+        return photo.url; // Extract URL from object format
+      }
+      return photo; // Already a URL string
+    });
+
     setFormData({
       name: facility.name,
       description: facility.description,
       address: facility.address,
       sportsSupported: facility.sportsSupported,
       amenities: facility.amenities,
-      photos: facility.photos || [],
+      photos: processedPhotos,
+      pricing: facility.pricing || { hourlyRate: '', peakHourRate: '', currency: 'USD' },
+      reviews: facility.reviews || { rating: 0, totalReviews: 0, comments: [] },
       operatingHours: facility.operatingHours || formData.operatingHours
     });
     setEditingFacility(facility);
@@ -204,12 +274,18 @@ const MyFacilities = () => {
     }
 
     try {
+      // Delete facility
       await API.delete(`/api/facilities/${facilityId}`);
       alert('Facility deleted successfully!');
       fetchMyFacilities();
     } catch (error) {
       console.error('Error deleting facility:', error);
-      alert('Error deleting facility. Please try again.');
+      const errorMessage = error.response?.data?.message || error.message || 'Error deleting facility. Please try again.';
+      alert(`Delete Error: ${errorMessage}`);
+      
+      // If delete fails due to authorization, we can still refresh the list
+      // to show current state
+      fetchMyFacilities();
     }
   };
 
@@ -244,14 +320,14 @@ const MyFacilities = () => {
             onClick={() => setShowForm(!showForm)}
             className="btn btn-primary"
           >
-            {showForm ? 'Cancel' : 'Add New Facility'}
+            {showForm ? '❌ Cancel' : '➕ Add New Facility'}
           </button>
         </div>
 
-        {/* Add/Edit Form */}
+        {/* Enhanced Add/Edit Form */}
         {showForm && (
           <div className="facility-form-card">
-            <h2>{editingFacility ? 'Edit Facility' : 'Add New Facility'}</h2>
+            <h2>{editingFacility ? '✏️ Edit Facility' : '➕ Add New Facility'}</h2>
             
             <form onSubmit={handleSubmit}>
               {/* Basic Information */}
@@ -265,6 +341,7 @@ const MyFacilities = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
+                    placeholder="Enter facility name..."
                     required
                   />
                 </div>
@@ -275,6 +352,7 @@ const MyFacilities = () => {
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
+                    placeholder="Describe your facility, its features, and what makes it special..."
                     rows={4}
                     required
                   />
@@ -292,6 +370,7 @@ const MyFacilities = () => {
                     name="address.street"
                     value={formData.address.street}
                     onChange={handleInputChange}
+                    placeholder="123 Main Street"
                     required
                   />
                 </div>
@@ -304,6 +383,7 @@ const MyFacilities = () => {
                       name="address.city"
                       value={formData.address.city}
                       onChange={handleInputChange}
+                      placeholder="City name"
                       required
                     />
                   </div>
@@ -315,6 +395,7 @@ const MyFacilities = () => {
                       name="address.state"
                       value={formData.address.state}
                       onChange={handleInputChange}
+                      placeholder="State"
                       required
                     />
                   </div>
@@ -326,6 +407,7 @@ const MyFacilities = () => {
                       name="address.zipCode"
                       value={formData.address.zipCode}
                       onChange={handleInputChange}
+                      placeholder="12345"
                       required
                     />
                   </div>
@@ -335,7 +417,7 @@ const MyFacilities = () => {
               {/* Sports */}
               <div className="form-section">
                 <h3>Sports Offered*</h3>
-                <div className="checkbox-grid">
+                <div className="checkbox-group">
                   {availableSports.map(sport => (
                     <label key={sport} className="checkbox-item">
                       <input
@@ -352,7 +434,7 @@ const MyFacilities = () => {
               {/* Amenities */}
               <div className="form-section">
                 <h3>Amenities</h3>
-                <div className="checkbox-grid">
+                <div className="checkbox-group">
                   {commonAmenities.map(amenity => (
                     <label key={amenity} className="checkbox-item">
                       <input
@@ -366,19 +448,130 @@ const MyFacilities = () => {
                 </div>
               </div>
 
+              {/* Pricing */}
+              <div className="form-section">
+                <h3>Pricing</h3>
+                <div className="pricing-grid">
+                  <div className="form-group">
+                    <label>Regular Hourly Rate</label>
+                    <input
+                      type="number"
+                      value={formData.pricing.hourlyRate}
+                      onChange={(e) => handlePricingChange('hourlyRate', e.target.value)}
+                      placeholder="25.00"
+                      step="0.01"
+                      min="0"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Peak Hour Rate</label>
+                    <input
+                      type="number"
+                      value={formData.pricing.peakHourRate}
+                      onChange={(e) => handlePricingChange('peakHourRate', e.target.value)}
+                      placeholder="35.00"
+                      step="0.01"
+                      min="0"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Currency</label>
+                    <select
+                      value={formData.pricing.currency}
+                      onChange={(e) => handlePricingChange('currency', e.target.value)}
+                      className="currency-select"
+                    >
+                      <option value="USD">USD ($)</option>
+                      <option value="EUR">EUR (€)</option>
+                      <option value="GBP">GBP (£)</option>
+                      <option value="INR">INR (₹)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Photo Upload */}
+              <div className="form-section">
+                <h3>Photos</h3>
+                <div className="photo-upload-section">
+                  <label htmlFor="photo-upload" className="photo-upload-btn">
+                    📸 Upload Photos
+                    <input
+                      id="photo-upload"
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                  
+                  {formData.photos.length > 0 && (
+                    <div className="photo-preview-grid">
+                      {formData.photos.map((photo, index) => (
+                        <div key={index} className="photo-preview">
+                          <img src={photo} alt={`Preview ${index + 1}`} />
+                          <button
+                            type="button"
+                            className="photo-remove-btn"
+                            onClick={() => removePhoto(index)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Reviews Section (Display Only for Editing) */}
+              {editingFacility && (
+                <div className="form-section">
+                  <h3>Reviews & Rating</h3>
+                  <div className="reviews-section">
+                    <div className="review-stats">
+                      <div className="stat-item">
+                        <span className="stat-value">{formData.reviews.rating || 0}/5</span>
+                        <span className="stat-label">Average Rating</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="stat-value">{formData.reviews.totalReviews || 0}</span>
+                        <span className="stat-label">Total Reviews</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="stat-value">
+                          {'⭐'.repeat(Math.floor(formData.reviews.rating || 0))}
+                        </span>
+                        <span className="stat-label">Star Rating</span>
+                      </div>
+                    </div>
+                    <p style={{ color: '#718096', fontSize: '0.9rem', marginTop: '1rem' }}>
+                      Reviews are managed automatically based on customer feedback
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* Operating Hours */}
               <div className="form-section">
                 <h3>Operating Hours</h3>
-                <div className="operating-hours">
+                <div className="operating-hours-grid">
                   {Object.keys(formData.operatingHours).map(day => (
-                    <div key={day} className="day-hours">
-                      <label className="day-label">
+                    <div key={day} className="operating-hour-row">
+                      <div className="day-name">
+                        {day.charAt(0).toUpperCase() + day.slice(1)}
+                      </div>
+                      
+                      <label className="checkbox-item">
                         <input
                           type="checkbox"
                           checked={formData.operatingHours[day].isOpen}
                           onChange={(e) => handleOperatingHoursChange(day, 'isOpen', e.target.checked)}
                         />
-                        {day.charAt(0).toUpperCase() + day.slice(1)}
+                        <span>Open</span>
                       </label>
                       
                       {formData.operatingHours[day].isOpen && (
@@ -396,17 +589,21 @@ const MyFacilities = () => {
                           />
                         </div>
                       )}
+                      
+                      {!formData.operatingHours[day].isOpen && (
+                        <span style={{ color: '#718096', fontStyle: 'italic' }}>Closed</span>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="form-actions">
-                <button type="button" onClick={resetForm} className="btn btn-outline">
-                  Cancel
+                <button type="button" onClick={resetForm} className="btn-cancel">
+                  ❌ Cancel
                 </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingFacility ? 'Update Facility' : 'Create Facility'}
+                <button type="submit" className="btn-submit" disabled={loading}>
+                  {loading ? '⏳ Saving...' : (editingFacility ? '✅ Update Facility' : '🚀 Create Facility')}
                 </button>
               </div>
             </form>
@@ -418,8 +615,8 @@ const MyFacilities = () => {
           {facilities.length === 0 ? (
             <div className="no-facilities">
               <div className="no-facilities-icon">🏟️</div>
-              <h3>No facilities yet</h3>
-              <p>Create your first facility to get started!</p>
+              <h3>No facilities in database</h3>
+              <p>No facilities found in the database. Create your first facility to get started!</p>
             </div>
           ) : (
             facilities.map(facility => (
@@ -431,8 +628,8 @@ const MyFacilities = () => {
                       {facility.address.street}, {facility.address.city}, {facility.address.state}
                     </p>
                     <div className="facility-stats">
-                      <span>{facility.totalCourts} Courts</span>
-                      <span>{facility.sportsSupported.join(', ')}</span>
+                      <span>🏟️ {facility.totalCourts || 0} Courts</span>
+                      <span>🏃 {facility.sportsSupported.join(', ')}</span>
                     </div>
                   </div>
                   <div className="facility-status">
@@ -441,11 +638,19 @@ const MyFacilities = () => {
                 </div>
 
                 <div className="facility-details">
-                  <p className="facility-description">{facility.description}</p>
+                  <p className="facility-description">
+                    {facility.description || 'No description available'}
+                  </p>
+                  
+                  {facility.amenities && facility.amenities.length > 0 && (
+                    <div className="facility-amenities">
+                      <strong>Amenities:</strong> {facility.amenities.join(', ')}
+                    </div>
+                  )}
                   
                   {facility.status === 'rejected' && facility.adminComments && (
                     <div className="admin-comments rejected">
-                      <strong>Admin Comments:</strong> {facility.adminComments}
+                      <strong>Admin Feedback:</strong> {facility.adminComments}
                     </div>
                   )}
                   
@@ -461,13 +666,13 @@ const MyFacilities = () => {
                     onClick={() => handleEdit(facility)}
                     className="btn btn-outline"
                   >
-                    Edit
+                    ✏️ Edit
                   </button>
                   <button 
                     onClick={() => handleDelete(facility._id)}
                     className="btn btn-danger"
                   >
-                    Delete
+                    🗑️ Delete
                   </button>
                   {facility.status === 'approved' && (
                     <a 
@@ -476,7 +681,7 @@ const MyFacilities = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      View Public Page
+                      👁️ View Public
                     </a>
                   )}
                 </div>

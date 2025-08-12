@@ -259,10 +259,10 @@ const Dashboard = () => {
         <div className="welcome-section">
           <div className="welcome-text">
             <h1 className="dashboard-title">
-              {timeOfDay}, {user?.name}! 👋
+              {timeOfDay}, {user?.name}! 🏆
             </h1>
             <p className="dashboard-subtitle">
-              Ready to book your next game? Let's get you on the court!
+              Ready to dominate the court? Your next victory awaits!
             </p>
           </div>
           <div className="header-actions">
@@ -270,8 +270,8 @@ const Dashboard = () => {
               onClick={() => navigate('/venues')}
               className="btn btn-primary"
             >
-              <span className="mr-2">🏸</span>
-              Book Now
+              <span className="mr-2">�</span>
+              Find Courts
             </button>
           </div>
         </div>
@@ -332,10 +332,10 @@ const Dashboard = () => {
         <h2 className="section-title">Quick Actions</h2>
         <div className="actions-grid">
           <Link to="/venues" className="action-card primary-action">
-            <div className="action-icon-large">🏸</div>
+            <div className="action-icon-large">�</div>
             <div className="action-content">
-              <h3>Find Courts</h3>
-              <p>Discover and book sports venues near you</p>
+              <h3>Discover Courts</h3>
+              <p>Find premium sports venues and book instantly</p>
               <div className="action-arrow">→</div>
             </div>
           </Link>
@@ -344,23 +344,23 @@ const Dashboard = () => {
             <div className="action-icon">📋</div>
             <div className="action-content">
               <h3>My Bookings</h3>
-              <p>Manage your reservations</p>
+              <p>Track and manage reservations</p>
             </div>
           </Link>
           
           <Link to="/profile" className="action-card">
             <div className="action-icon">👤</div>
             <div className="action-content">
-              <h3>Profile</h3>
-              <p>Update your information</p>
+              <h3>My Profile</h3>
+              <p>Update preferences & settings</p>
             </div>
           </Link>
           
           <div className="action-card" onClick={() => navigate('/venues')}>
             <div className="action-icon">⭐</div>
             <div className="action-content">
-              <h3>Leave Review</h3>
-              <p>Rate your experiences</p>
+              <h3>Rate & Review</h3>
+              <p>Share your court experiences</p>
             </div>
           </div>
         </div>
@@ -412,14 +412,14 @@ const Dashboard = () => {
           
           {recentBookings.length === 0 && (
             <div className="empty-state">
-              <div className="empty-icon">🏸</div>
+              <div className="empty-icon">�</div>
               <h3>No bookings yet</h3>
-              <p>Start by booking your first court!</p>
+              <p>Time to make your first court reservation and start playing!</p>
               <button 
                 onClick={() => navigate('/venues')}
                 className="btn btn-primary"
               >
-                Browse Venues
+                Discover Courts
               </button>
             </div>
           )}
@@ -429,9 +429,9 @@ const Dashboard = () => {
       {/* Favorite Venues */}
       <div className="favorites-section">
         <div className="section-header">
-          <h2 className="section-title">Your Favorite Venues</h2>
+          <h2 className="section-title">Your Premier Venues</h2>
           <Link to="/venues" className="view-all-link">
-            Explore More →
+            Explore More Courts →
           </Link>
         </div>
         
@@ -461,8 +461,8 @@ const Dashboard = () => {
           
           {favoriteVenues.length === 0 && (
             <div className="empty-favorites">
-              <div className="empty-icon">❤️</div>
-              <p>No favorites yet. Start exploring venues!</p>
+              <div className="empty-icon">🏆</div>
+              <p>No favorites yet. Discover amazing courts and save your top picks!</p>
             </div>
           )}
         </div>
@@ -472,13 +472,13 @@ const Dashboard = () => {
       {stats.upcomingBookings > 0 && (
         <div className="reminder-section">
           <div className="reminder-card">
-            <div className="reminder-icon">⏰</div>
+            <div className="reminder-icon">⚡</div>
             <div className="reminder-content">
-              <h3>Upcoming Games</h3>
-              <p>You have {stats.upcomingBookings} upcoming bookings. Don't forget to check in!</p>
+              <h3>Game Time Approaching!</h3>
+              <p>You have {stats.upcomingBookings} upcoming matches. Get ready to dominate the court!</p>
             </div>
             <Link to="/my-bookings" className="btn btn-outline">
-              View Details
+              View Schedule
             </Link>
           </div>
         </div>
@@ -496,7 +496,7 @@ const Dashboard = () => {
               {timeOfDay}, {user?.name}! 🏢
             </h1>
             <p className="dashboard-subtitle">
-              Manage your sports facilities and track your business performance
+              Monitor your venues, maximize revenue, and grow your sports business
             </p>
           </div>
           <div className="header-actions">
@@ -504,8 +504,8 @@ const Dashboard = () => {
               onClick={() => navigate('/my-facilities')}
               className="btn btn-primary"
             >
-              <span className="mr-2">➕</span>
-              Add Facility
+              <span className="mr-2">🏗️</span>
+              Manage Venues
             </button>
           </div>
         </div>
@@ -603,10 +603,10 @@ const Dashboard = () => {
         <h2 className="section-title">Quick Actions</h2>
         <div className="actions-grid owner-actions">
           <Link to="/my-facilities" className="action-card primary-action">
-            <div className="action-icon-large">🏢</div>
+            <div className="action-icon-large">�️</div>
             <div className="action-content">
-              <h3>Manage Facilities</h3>
-              <p>View and edit your sports facilities</p>
+              <h3>Venue Dashboard</h3>
+              <p>Manage all your sports facilities in one place</p>
               <div className="action-arrow">→</div>
             </div>
           </Link>
@@ -614,24 +614,24 @@ const Dashboard = () => {
           <div className="action-card" onClick={() => navigate('/my-facilities')}>
             <div className="action-icon">➕</div>
             <div className="action-content">
-              <h3>Add New Facility</h3>
-              <p>Register another venue</p>
+              <h3>Add New Venue</h3>
+              <p>Expand your sports facility network</p>
             </div>
           </div>
           
           <div className="action-card">
             <div className="action-icon">📊</div>
             <div className="action-content">
-              <h3>Analytics</h3>
-              <p>Detailed performance reports</p>
+              <h3>Business Analytics</h3>
+              <p>Revenue insights & performance metrics</p>
             </div>
           </div>
           
           <div className="action-card">
             <div className="action-icon">💳</div>
             <div className="action-content">
-              <h3>Payments</h3>
-              <p>Revenue and transactions</p>
+              <h3>Financial Hub</h3>
+              <p>Payments, earnings & transactions</p>
             </div>
           </div>
         </div>

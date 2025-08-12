@@ -30,7 +30,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+  <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Hero Section - Simple Layout */}
       <section className="hero-simple">
         <div className="container">
@@ -80,6 +80,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+
+
 
       {/* Venues Section - Simple Cards */}
       <section className="venues-section-simple">
@@ -192,6 +195,56 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+            {/* Why Players Choose QuickCourt Section */}
+      <section className="why-choose-section">
+        <div className="container why-choose-container">
+          <h2 className="why-choose-title">Why Players Choose QuickCourt</h2>
+          <p className="why-choose-subtitle">Everything you need to discover, evaluate and book quality sports venues with confidence—all in one modern platform.</p>
+          <div className="why-choose-features-grid">
+            <div className="why-choose-feature-card">
+              <div className="why-choose-icon lightning">⚡ <span className="why-choose-live">LIVE</span></div>
+              <div className="why-choose-feature-title">Instant Booking</div>
+              <div className="why-choose-feature-desc">Real-time availability and lightning fast confirmation so you can lock in your slot without back-and-forth calls.</div>
+            </div>
+            <div className="why-choose-feature-card">
+              <div className="why-choose-icon location">📍</div>
+              <div className="why-choose-feature-title">Location Smart</div>
+              <div className="why-choose-feature-desc">Search venues near you with precise geo lookups and distance ordering to save time on travel.</div>
+            </div>
+            <div className="why-choose-feature-card">
+              <div className="why-choose-icon payment">�</div>
+              <div className="why-choose-feature-title">Secure Payments</div>
+              <div className="why-choose-feature-desc">Integrated payment gateway for smooth, trusted transactions and automated receipts.</div>
+            </div>
+            <div className="why-choose-feature-card">
+              <div className="why-choose-icon pricing">🧾</div>
+              <div className="why-choose-feature-title">Transparent Pricing</div>
+              <div className="why-choose-feature-desc">Clear hourly rates and dynamic sport-wise pricing so you always know what you pay—no surprises.</div>
+            </div>
+            <div className="why-choose-feature-card">
+              <div className="why-choose-icon verified">🏅</div>
+              <div className="why-choose-feature-title">Verified Venues</div>
+              <div className="why-choose-feature-desc">Curated facilities with quality standards and community ratings to ensure great playing experiences.</div>
+            </div>
+            <div className="why-choose-feature-card">
+              <div className="why-choose-icon dashboard">📊</div>
+              <div className="why-choose-feature-title">Owner Dashboard</div>
+              <div className="why-choose-feature-desc">Facility owners manage courts, pricing and approvals from a powerful, easy-to-use control panel.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Section */}
+      <footer className="footer-simple">
+        <div className="container footer-container">
+          <div className="footer-content">
+            <span className="footer-logo">🏟️ QuickCourt</span>
+            <span className="footer-text">&copy; {new Date().getFullYear()} QuickCourt. All rights reserved.</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

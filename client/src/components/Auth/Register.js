@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,7 +18,6 @@ const Register = () => {
   
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   // Popular country codes with flags
   const countryCodes = [
@@ -91,6 +94,21 @@ const Register = () => {
     }
   };
 
+  const handleRoleSelect = (role) => {
+    setFormData({
+      ...formData,
+      role: role
+    });
+    
+    // Clear any role-related errors
+    if (errors.role) {
+      setErrors({
+        ...errors,
+        role: ''
+      });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -99,24 +117,27 @@ const Register = () => {
     }
 
     setLoading(true);
+    setErrors({});
 
     try {
-      // Simulate API call for demo
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Call the register function from AuthContext
+      const result = await register(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.role,
+        formData.countryCode + formData.phone
+      );
       
-      // For demo purposes, show success and redirect to login
-      alert('Account created successfully! Please login with demo credentials.');
-      navigate('/login');
-      
-      // TODO: Implement actual registration API call
-      // const response = await axios.post('/api/auth/register', {
-      //   name: formData.name,
-      //   email: formData.email,
-      //   password: formData.password,
-      //   phone: formData.countryCode + formData.phone,
-      //   role: formData.role
-      // });
+      if (result.success) {
+        // Registration successful, redirect to dashboard
+        navigate('/dashboard');
+      } else {
+        // Registration failed, show error
+        setErrors({ general: result.message || 'Registration failed. Please try again.' });
+      }
     } catch (error) {
+      console.error('Registration error:', error);
       setErrors({ general: 'Registration failed. Please try again.' });
     } finally {
       setLoading(false);
@@ -269,35 +290,55 @@ const Register = () => {
                 <label className="form-label">
                   Account Type
                 </label>
-                <div className="space-y-3">
-                  <div 
-                    className={`account-type-option ${formData.role === 'user' ? 'selected' : ''}`}
-                    onClick={() => handleChange({ target: { name: 'role', value: 'user' } })}
-                  >
-                    <div className="account-type-icon">👤</div>
-                    <div className="account-type-content">
-                      <div className="account-type-title">Regular User</div>
-                      <div className="account-type-description">
-                        Book sports venues and manage your reservations
+                <div className="radio-group">
+                  <div className="radio-option">
+                    <input
+                      type="radio"
+                      id="user"
+                      name="role"
+                      value="user"
+                      checked={formData.role === 'user'}
+                      onChange={(e) => handleRoleSelect(e.target.value)}
+                      className="radio-input"
+                    />
+                    <label htmlFor="user" className="radio-label">
+                      <div className="radio-content">
+                        <div className="radio-icon">👤</div>
+                        <div className="radio-text">
+                          <div className="radio-title">Regular User</div>
+                          <div className="radio-description">
+                            Book sports venues and manage your reservations
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </label>
                   </div>
                   
-                  <div 
-                    className={`account-type-option ${formData.role === 'facility_owner' ? 'selected' : ''}`}
-                    onClick={() => handleChange({ target: { name: 'role', value: 'facility_owner' } })}
-                  >
-                    <div className="account-type-icon">🏢</div>
-                    <div className="account-type-content">
-                      <div className="account-type-title">Facility Owner</div>
-                      <div className="account-type-description">
-                        Manage venues, courts, and bookings for your facilities
+                  <div className="radio-option">
+                    <input
+                      type="radio"
+                      id="facility_owner"
+                      name="role"
+                      value="facility_owner"
+                      checked={formData.role === 'facility_owner'}
+                      onChange={(e) => handleRoleSelect(e.target.value)}
+                      className="radio-input"
+                    />
+                    <label htmlFor="facility_owner" className="radio-label">
+                      <div className="radio-content">
+                        <div className="radio-icon">🏢</div>
+                        <div className="radio-text">
+                          <div className="radio-title">Facility Owner</div>
+                          <div className="radio-description">
+                            Manage venues, courts, and bookings for your facilities
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </label>
                   </div>
                 </div>
-                <div className="phone-validation-message">
-                  <span className="icon">💡</span>
+                <div className="account-type-hint">
+                  <span className="hint-icon">💡</span>
                   Choose your account type based on how you plan to use QuickCourt
                 </div>
               </div>

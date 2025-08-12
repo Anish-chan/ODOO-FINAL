@@ -89,36 +89,22 @@ const Navbar = () => {
                 </button>
                 
                 {showDropdown && (
-                  <div className="user-dropdown">
-                    <div className="dropdown-header">
-                      <div className="user-info">
-                        <div className="user-name-large">{user.name || 'User'}</div>
-                        <div className="user-email">{user.email}</div>
-                        <div className="user-role">
-                          <span className={`role-badge role-${user.role}`}>
-                            {user.role === 'admin' ? '👑' : user.role === 'owner' ? '🏢' : '👤'} {user.role}
-                          </span>
-                        </div>
+                  <div className="user-dropdown compact">
+                    <div className="dropdown-menu-compact">
+                      <div className="dropdown-user-info">
+                        <span className="dropdown-user-name">{user.name || 'User'}</span>
+                        <span className={`dropdown-role-badge role-${user.role}`}>
+                          {user.role}
+                        </span>
                       </div>
-                    </div>
-                    <div className="dropdown-divider"></div>
-                    <div className="dropdown-menu">
-                      <Link to="/profile" className="dropdown-item" onClick={() => setShowDropdown(false)}>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        My Profile
+                      <div className="dropdown-divider-thin"></div>
+                      <Link to="/profile" className="dropdown-item-compact" onClick={() => setShowDropdown(false)}>
+                        Profile
                       </Link>
-                      <Link to="/bookings" className="dropdown-item" onClick={() => setShowDropdown(false)}>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v16a2 2 0 002 2z" />
-                        </svg>
-                        My Bookings
+                      <Link to="/bookings" className="dropdown-item-compact" onClick={() => setShowDropdown(false)}>
+                        Bookings
                       </Link>
-                      <button onClick={handleLogout} className="dropdown-item logout-item">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
+                      <button onClick={handleLogout} className="dropdown-item-compact logout-compact">
                         Sign Out
                       </button>
                     </div>

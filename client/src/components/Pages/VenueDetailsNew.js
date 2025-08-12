@@ -14,6 +14,17 @@ const VenueDetails = () => {
   const [showPricingModal, setShowPricingModal] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedSport, setSelectedSport] = useState(null);
+  const [bookingData, setBookingData] = useState({
+    sport: '',
+    date: '',
+    startTime: '',
+    duration: 2,
+    selectedCourts: ['Court 1'], // Default to one court
+    totalPrice: 1200,
+    hourlyRate: 600
+  });
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -203,6 +214,35 @@ const VenueDetails = () => {
       'Box Cricket': { peak: 1200, nonPeak: 1000, weekend: 1500 }
     };
     return pricing[sportName] || { peak: 600, nonPeak: 500, weekend: 800 };
+  };
+
+  // Handle booking form changes
+  const handleBookingChange = (field, value) => {
+    setBookingData(prev => {
+      const updated = { ...prev, [field]: value };
+      
+      // Recalculate price when relevant fields change
+      if (field === 'sport' || field === 'selectedCourts') {
+        const basePrice = field === 'sport' ? getPricingForSport(value) : getPricingForSport(updated.sport);
+        const hourlyRate = basePrice ? basePrice.peak : 600;
+        updated.hourlyRate = hourlyRate;
+        updated.totalPrice = updated.duration * hourlyRate * Math.max(1, updated.selectedCourts.length);
+      }
+      
+      return updated;
+    });
+  };
+
+  // Handle duration change with dynamic pricing
+  const changeDuration = (increment) => {
+    const newDuration = Math.max(1, bookingData.duration + increment);
+    const hourlyRate = bookingData.hourlyRate || 600;
+    
+    setBookingData(prev => ({
+      ...prev,
+      duration: newDuration,
+      totalPrice: newDuration * hourlyRate * Math.max(1, prev.selectedCourts.length)
+    }));
   };
 
   if (loading || !facility) {
@@ -458,87 +498,103 @@ const VenueDetails = () => {
         <div className="modal-overlay" onClick={() => setShowBookingModal(false)}>
           <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Court Booking</h3>
-              <button className="close-btn" onClick={() => setShowBookingModal(false)}>×</button>
+              <h2>Book {facility.name}</h2>
+              <button 
+                className="close-btn" 
+                onClick={() => setShowBookingModal(false)}
+              >
+                ×
+              </button>
             </div>
+            
             <div className="booking-content">
-              <div className="venue-info">
-                <h4>{facility.name}</h4>
-                <p>📍 {facility.location}</p>
-                <div className="rating-display">
-                  <span className="stars">{renderStars(facility.rating)}</span>
-                  <span className="rating-text">{facility.rating} ({facility.totalReviews})</span>
-                </div>
-              </div>
-              
               <div className="booking-form">
-                <div className="form-group">
+                <div className="form-section">
                   <label>Sport</label>
-                  <select className="form-control">
-                    <option>🏸 Badminton</option>
-                    <option>🏓 Table Tennis</option>
-                    <option>🏏 Box Cricket</option>
+                  <select 
+                    value={bookingData.sport} 
+                    onChange={(e) => handleBookingChange('sport', e.target.value)}
+                    className="form-control"
+                  >
+                    <option value="">Select Sport</option>
+                    <option value="Badminton">🏸 Badminton</option>
+                    <option value="Table Tennis">🏓 Table Tennis</option>
+                    <option value="Box Cricket">🏏 Box Cricket</option>
                   </select>
                 </div>
-                
-                <div className="form-group">
+
+                <div className="form-section">
                   <label>Date</label>
-                  <input type="date" className="form-control" defaultValue="2025-05-06" />
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    value={bookingData.date}
+                    onChange={(e) => handleBookingChange('date', e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                  />
                 </div>
-                
-                <div className="form-group">
+
+                <div className="form-section">
                   <label>Start Time</label>
-                  <input type="time" className="form-control" defaultValue="01:00" />
+                  <input 
+                    type="time" 
+                    className="form-control"
+                    value={bookingData.startTime}
+                    onChange={(e) => handleBookingChange('startTime', e.target.value)}
+                  />
                 </div>
-                
-                <div className="form-group">
-                  <label>Duration</label>
+
+                <div className="form-section">
+                  <label>Duration (Hours)</label>
                   <div className="duration-control">
-                    <button className="duration-btn">-</button>
-                    <span className="duration-value">2 Hr</span>
-                    <button className="duration-btn">+</button>
+                    <button 
+                      type="button" 
+                      onClick={() => changeDuration(-1)}
+                      className="duration-btn"
+                    >
+                      -
+                    </button>
+                    <span className="duration-value">{bookingData.duration} Hr</span>
+                    <button 
+                      type="button" 
+                      onClick={() => changeDuration(1)}
+                      className="duration-btn"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
-                
-                <div className="form-group">
+
+                <div className="form-section">
                   <label>Court</label>
-                  <div className="court-selection">
-                    <span className="court-tag">Table 1 ×</span>
-                    <span className="court-tag">Table 2 ×</span>
-                    <select className="court-dropdown">
-                      <option>--Select Court--</option>
-                    </select>
-                  </div>
+                  <select 
+                    className="form-control"
+                    value={`${bookingData.selectedCourts.length}`}
+                    onChange={(e) => {
+                      const count = parseInt(e.target.value);
+                      const courts = [];
+                      for (let i = 1; i <= count; i++) {
+                        courts.push(`Table ${i}`);
+                      }
+                      handleBookingChange('selectedCourts', courts);
+                    }}
+                  >
+                    <option value="0">--Select Court--</option>
+                    <option value="1">1 × Table</option>
+                    <option value="2">2 × Table</option>
+                    <option value="3">3 × Table</option>
+                  </select>
                 </div>
-                
-                <button className="continue-payment-btn">
-                  Continue to Payment - ₹1200.00
+
+                <button 
+                  className="continue-payment-btn"
+                  disabled={!bookingData.sport || !bookingData.date || !bookingData.startTime || bookingData.selectedCourts.length === 0}
+                >
+                  {!bookingData.sport || !bookingData.date || !bookingData.startTime || bookingData.selectedCourts.length === 0 
+                    ? 'Please complete your selection' 
+                    : `Continue to Payment - ₹${bookingData.duration * (bookingData.hourlyRate || 600) * Math.max(1, bookingData.selectedCourts.length)}.00`
+                  }
                 </button>
-              </div>
-              
-              <div className="booking-calendar">
-                <div className="calendar-header">
-                  <h5>May 2025</h5>
-                </div>
-                <div className="calendar-grid">
-                  {/* Calendar implementation */}
-                  <div className="calendar-day">1</div>
-                  <div className="calendar-day">2</div>
-                  <div className="calendar-day">3</div>
-                  <div className="calendar-day">4</div>
-                  <div className="calendar-day">5</div>
-                  <div className="calendar-day selected">6</div>
-                  <div className="calendar-day">7</div>
-                  {/* More days... */}
-                </div>
-                
-                <div className="time-slots">
-                  <div className="time-slot available">09:00 AM</div>
-                  <div className="time-slot available">09:30 AM</div>
-                  <div className="time-slot available">10:00 AM</div>
-                  <div className="time-slot unavailable">10:30 AM</div>
-                  <div className="time-slot available">11:00 AM</div>
-                </div>
               </div>
             </div>
           </div>

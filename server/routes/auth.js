@@ -75,29 +75,31 @@ router.post('/login', [
 
     const { email, password } = req.body;
 
-    // Check if it's a demo user
-    const demoUser = demoUsers.find(user => user.email === email);
-    if (!demoUser) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Invalid credentials. Only demo accounts are available.' 
-      });
-    }
-
-    // Check demo password
-    if (password !== demoUser.password) {
+    // Find user in database first
+    const user = await User.findOne({ email });
+    if (!user) {
       return res.status(400).json({ 
         success: false, 
         message: 'Invalid credentials' 
       });
     }
 
-    // Find user in database
-    const user = await User.findOne({ email });
-    if (!user) {
+    // Check if it's a demo user (plain text password)
+    const demoUser = demoUsers.find(demoUser => demoUser.email === email);
+    let isPasswordValid = false;
+
+    if (demoUser && password === demoUser.password) {
+      // Demo user with plain text password
+      isPasswordValid = true;
+    } else {
+      // Regular user with hashed password
+      isPasswordValid = await bcrypt.compare(password, user.password);
+    }
+
+    if (!isPasswordValid) {
       return res.status(400).json({ 
         success: false, 
-        message: 'User not found' 
+        message: 'Invalid credentials' 
       });
     }
 
@@ -105,6 +107,7 @@ router.post('/login', [
     const payload = {
       user: {
         id: user.id,
+        email: user.email,
         role: user.role
       }
     };
@@ -131,6 +134,87 @@ router.post('/login', [
     res.status(500).json({ 
       success: false, 
       message: 'Server error' 
+    });
+  }
+});
+
+// @route    POST /api/auth/register
+// @desc     Register new user
+// @access   Public
+router.post('/register', [
+  body('name', 'Name is required').not().isEmpty().trim(),
+  body('email', 'Please include a valid email').isEmail().normalizeEmail(),
+  body('password', 'Password must be at least 6 characters').isLength({ min: 6 }),
+  body('role', 'Role is required').isIn(['user', 'facility_owner'])
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Please check your input data',
+        errors: errors.array()
+      });
+    }
+
+    const { name, email, password, role, phone } = req.body;
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'User with this email already exists' 
+      });
+    }
+
+    // Create new user
+    user = new User({
+      name,
+      email,
+      password,
+      role: role || 'user',
+      phone
+    });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    // Generate JWT
+    const payload = {
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      }
+    };
+
+    const token = jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (err) {
+    console.error('Registration error:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during registration' 
     });
   }
 });
