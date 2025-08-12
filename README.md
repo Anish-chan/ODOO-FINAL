@@ -11,7 +11,7 @@
 - *Aniruddha Dewanjee* - Front-End Developer 
 
 ---
-Video Link: https://drive.google.com/file/d/1DU4lVPd4uTYt60UoeRUNNQQShBImpBa4/view?usp=sharing 
+Video Link: https://drive.google.com/file/d/1PmUbvuH0_ehPni1SAqMashTQf_iB2I9Q/view?usp=sharing
 ## 🚀 Project Overview
 
 *QuickCourt* is a comprehensive MERN stack sports venue booking platform that revolutionizes how sports enthusiasts discover, book, and manage their favorite courts and facilities. Our platform bridges the gap between players and venue owners, creating a seamless ecosystem for sports facility management and booking.
